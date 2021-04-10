@@ -2,17 +2,19 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const router = express.Router();
 const employees = [];
 
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
+app.use(cors())
 
 router.get('/', (req, res) => {
-    res.status(200).send({ message: `API PSF V1 in OnLine`})
+    res.status(200).send({ message: `API PSF V1 is OnLine`})
 })
 
 router.get('/employees', (req, res) => {
