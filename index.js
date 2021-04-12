@@ -1,3 +1,4 @@
+
 'use strict'
 
 const express = require('express');
@@ -65,7 +66,7 @@ router.get('/perPerson/:id/:field', (req, res) => {
             }
         });
     }
-    flag ?  res.status(200).send({Field: fieldToFind}) :
+    flag ?  res.status(200).send(fieldToFind) :
             res.status(404).send({message: `Employee not found`});
 });
 
