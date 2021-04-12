@@ -44,6 +44,31 @@ router.get('/perPerson/:id', (req, res) => {
             res.status(404).send({message: `Employee not found`});
 });
 
+router.get('/perPerson/:id/:field', (req, res) => {
+    let empReturn;
+    let flag = false;
+    let fieldToFind;
+    employees.forEach(
+        (employee) => {
+            if(employee.id == req.params.id){
+                empReturn = employee;
+                flag = true;
+            }
+        } 
+    );
+
+    if(flag){
+        let fields = Object.keys(empReturn);
+        fields.forEach((field) => {
+            if(field = req.params.field){
+                fieldToFind = empReturn[`${field}`];
+            }
+        });
+    }
+    flag ?  res.status(200).send({Field: fieldToFind}) :
+            res.status(404).send({message: `Employee not found`});
+});
+
 router.post('/perPerson', (req, res) => {
     let employee = req.body;
     employee.id = Math.random().toString(36).substring(2, 12);
