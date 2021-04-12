@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 80;
@@ -18,7 +19,14 @@ router.get('/', (req, res) => {
 })
 
 router.get('/employees', (req, res) => {
-    res.status(200).send(employees);
+//	let employeesFJ;
+//	fs.readFile('./employee.json', 'utf-8', (err, data) => {
+//		if (err) {
+//			throw err;
+//		}
+//	res.status(200).send(data);
+	res.status(200).send(employees);
+//	});
 });
 
 router.get('/perPerson/:id', (req, res) => {
@@ -42,7 +50,7 @@ router.post('/perPerson', (req, res) => {
     employees.push(employee);
     res.status(200).send({Result: {message: `The employee was created`, employee}});
 });
-
+ 
 router.post('/perPerson/batch', (req, res) => {
     let employeesBatch = req.body;
     console.log(employeesBatch)
@@ -53,6 +61,12 @@ router.post('/perPerson/batch', (req, res) => {
             employees.push(newEmployee);
         }
     );
+//    fs.writeFile('employee.json', JSON.stringify(employees), (err) => {
+//	if(err) {
+//		throw err;
+//	}
+//	console.log("Data saved");
+//	});
     res.status(200).send({Result: {message: `The employees were created`}, employees});
 });
 
