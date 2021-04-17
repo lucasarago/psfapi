@@ -2,17 +2,15 @@
 'use strict'
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 const router = express.Router();
-const employees = [];
 
-app.use(bodyParser.urlencoded({ extended: false}))
-app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: false}))
+app.use(express.json())
 app.use(cors())
 
 router.get('/', (req, res) => {
@@ -20,45 +18,40 @@ router.get('/', (req, res) => {
 })
 
 router.get('/employees', (req, res) => {
-//	let employeesFJ;
-//	fs.readFile('./employee.json', 'utf-8', (err, data) => {
-//		if (err) {
-//			throw err;
-//		}
-//	res.status(200).send(data);
-	res.status(200).send(employees);
-//	});
+	fs.readFile('./employee.json', 'utf-8', (err, data) => {
+		if (err) res.status(500).send({message: `Internal Server Error ${err}`});
+        else res.status(200).send(data);
+	});
 });
 
 router.get('/perPerson/:id', (req, res) => {
+    const empJSON = fs.readFileSync('./employee.json', 'utf-8', (err, data) => {
+        if (err) throw err;
+	});
+    let emp = JSON.parse(empJSON);
     let empReturn;
-    let flag = false;
-    employees.forEach(
-        (employee) => {
-            if(employee.id == req.params.id){
-                empReturn = employee;
-                flag = true;
-            }
-        } 
-    );
-    flag ?  res.status(200).send({Employee: empReturn}) :
-            res.status(404).send({message: `Employee not found`});
+    emp.forEach((employee) => {
+        if(employee.id == req.params.id){
+            empReturn = employee;
+        }
+    });
+    empReturn != undefined ?    res.status(200).send({Employee: empReturn}) :
+                                res.status(404).send({message: `Employee not found`});
 });
 
 router.get('/perPerson/:id/:field', (req, res) => {
-    let empReturn;
-    let flag = false;
     let fieldToFind;
-    employees.forEach(
-        (employee) => {
-            if(employee.id == req.params.id){
-                empReturn = employee;
-                flag = true;
-            }
-        } 
-    );
-
-    if(flag){
+    const empJSON = fs.readFileSync('./employee.json', 'utf-8', (err, data) => {
+        if (err) throw err;
+	});
+    let emp = JSON.parse(empJSON);
+    let empReturn;
+    emp.forEach((employee) => {
+        if(employee.id == req.params.id){
+            empReturn = employee;
+        }
+    });
+    if(empReturn != undefined){
         let fields = Object.keys(empReturn);
         fields.forEach((field) => {
             if(field = req.params.field){
@@ -66,66 +59,113 @@ router.get('/perPerson/:id/:field', (req, res) => {
             }
         });
     }
-    flag ?  res.status(200).send(fieldToFind) :
-            res.status(404).send({message: `Employee not found`});
+    fieldToFind != undefined ?  res.status(200).send(fieldToFind) :
+                                res.status(404).send({message: `Employee not found`});
 });
 
 router.post('/perPerson', (req, res) => {
-    let employee = req.body;
+    let employee = {};
     employee.id = Math.random().toString(36).substring(2, 12);
-    employees.push(employee);
-    res.status(200).send({Result: {message: `The employee was created`, employee}});
+    employee.firstName = req.body.firstName;
+    employee.lastName = req.body.lastName;
+    employee.company = req.body.company;
+    employee.city = req.body.company;
+    employee.tasks = req.body.tasks;
+    fs.readFile('employee.json', 'utf8', (err, data) => {
+        if(err){
+            console.log(err);
+        } else {
+            let emp = JSON.parse(data);
+            console.log(emp)
+            emp.push(employee);
+            let json = JSON.stringify(emp);
+            fs.writeFile('employee.json', json, 'utf8', (err, data) =>{
+                if(err) throw err;
+                else{
+                    res.status(200).send({Result: {message: `The employee was created`, employee}});
+                }
+
+            });
+        }
+    });
 });
  
 router.post('/perPerson/batch', (req, res) => {
-    let employeesBatch = req.body;
-    console.log(employeesBatch)
-    employeesBatch.forEach(
-        (empl) => {
-            let newEmployee = empl;
-            newEmployee.id = Math.random().toString(36).substring(2, 12);
-            employees.push(newEmployee);
+    fs.readFile('employee.json', 'utf8', (err, data) => {
+        if(err){
+            res.status(500).send({message: "Internal Sever Error"});
+        } else {
+            let employeesBatch = req.body;
+            let emp = JSON.parse(data);
+            employeesBatch.forEach(
+                (empl) => {
+                    let newEmployee = {};
+                    newEmployee.id = Math.random().toString(36).substring(2, 12);
+                    newEmployee.firstName = empl.firstName;
+                    newEmployee.lastName = empl.lastName;
+                    newEmployee.company = empl.company;
+                    newEmployee.city = empl.company;
+                    newEmployee.tasks = empl.tasks;
+                    emp.push(newEmployee);
+                }
+            );
+            let json = JSON.stringify(emp);
+            fs.writeFile('employee.json', json, 'utf8', (err, data) =>{
+                if(err) throw err;
+                else{
+                    res.status(200).send({Result: {message: `The employees were created`, employeesBatch}});
+                }
+
+            });
         }
-    );
-//    fs.writeFile('employee.json', JSON.stringify(employees), (err) => {
-//	if(err) {
-//		throw err;
-//	}
-//	console.log("Data saved");
-//	});
-    res.status(200).send({Result: {message: `The employees were created`}, employees});
+    });
 });
 
 router.put('/perPerson/:id', (req, res) => {
-    let flag = false;
-    let updatedEmployee = req.body;
-    employees.forEach(
-        (employee, index) => {
-            if(employee.id == req.params.id){
-                employees[index] = req.body;
-                employees[index].id = req.params.id;
-                flag = true;
-            }
+    const empJSON = fs.readFileSync('./employee.json', 'utf-8', (err, data) => {
+        if (err) throw err;
+	});
+    let emp = JSON.parse(empJSON);
+    let requestBody = JSON.stringify(req.body)
+    let empTemp = JSON.parse(requestBody);
+    let empReturn = {};
+    emp.forEach((employee, index) => {
+        if(employee.id == req.params.id){
+            empReturn.id = req.params.id;
+            empReturn.firstName = empTemp.firstName;
+            empReturn.lastName = empTemp.lastName;
+            empReturn.company = empTemp.company;
+            empReturn.city = empTemp.company;
+            empReturn.tasks = empTemp.tasks;
+            emp[index] = empReturn;
         }
-    );
-    flag ?  res.status(200).send({Result: {message: `The employee was updated`}, updatedEmployee}) :
+    });
+    fs.writeFile('employee.json', JSON.stringify(emp), 'utf8', (err, data) =>{
+        if(err) res.status(500).send({message: `Internal Server Error ${err}`});
+    });
+    let updatedEmployee = req.body;
+    empReturn != undefined ?  res.status(200).send({Result: {message: `The employee was updated`}, updatedEmployee}) :
             res.status(404).send({message: 'Employee not found'});
 });
 
 router.delete('/perPerson/:id', (req, res) => {
+    const empJSON = fs.readFileSync('./employee.json', 'utf-8', (err, data) => {
+        if (err) throw err;
+	});
+    let emp = JSON.parse(empJSON);
     let deletedEmployee;
-    let flag = false;
-    employees.forEach(
-        (employee, index) => {
-            if(employee.id == req.params.id){
-                deletedEmployee = employee;
-                employees.splice(index, 1);
-                flag = true;
-            }
+    emp.forEach((employee, index) => {
+        if(employee.id == req.params.id){
+            deletedEmployee = employee;
+            emp.splice(index, 1);
         }
-    )
-    flag ?  res.status(200).send({Result: {message: `The employee was deleted`}, deletedEmployee}) :
-            res.status(404).send({message: 'Employee not found'});
+    });
+    fs.writeFile('employee.json', JSON.stringify(emp), 'utf8', (err, data) =>{
+        if(err) res.status(500).send({message: `Internal Server Error ${err}`});
+    });
+
+    deletedEmployee != undefined ?  res.status(200).send({Result: {message: `The employee was deleted`}, deletedEmployee}) :
+                                    res.status(404).send({message: 'Employee not found'});
 });
 
 app.use('/api/v1', router);
