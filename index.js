@@ -4,9 +4,10 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const mongoose = require('mongoose')
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const router = express.Router();
 
 app.use(express.urlencoded({ extended: false}))
@@ -14,7 +15,7 @@ app.use(express.json())
 app.use(cors())
 
 router.get('/', (req, res) => {
-    res.status(200).send({ message: `API PSF V1 is OnLine`})
+    res.status(200).send({ message: `API v2 PSF V1 is OnLine`})
 })
 
 router.get('/employees', (req, res) => {
@@ -168,7 +169,17 @@ router.delete('/perPerson/:id', (req, res) => {
                                     res.status(404).send({message: 'Employee not found'});
 });
 
-app.use('/api/v1', router);
-app.listen(port, () => {
-    console.log(`API REST running on: ${port}`)
+mongoose.connect('mongodb://localhost:27017/ssf', (err, res) => {
+    if(err) {
+        return console.log(`Error in the DB: ${err}`)
+    }
+    console.log('DB connection established')
+
+    app.use('/api/v1', router);
+    app.listen(port, () => {
+        console.log(`API REST running on: ${port}`)
+    })
+
 })
+
+
