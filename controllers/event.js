@@ -50,7 +50,7 @@ const getEventById = (req, res) => {
                                 <ns3:externalEventMeta>
                                     <ns3:externalEventId>2dc67448-a1d9-4c31-8f04-bcb94bfe23b3</ns3:externalEventId>
                                     <ns3:type>com.successfactors.Employment.AssignmentInformation.ReHire</ns3:type>
-                                    <ns3:publishedAt>${event.publishedAt}</ns3:publishedAt>
+                                    <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
                                     <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
                                     <ns3:effective>current</ns3:effective>
                                     <ns3:repost>${event.repost}</ns3:repost>
@@ -59,39 +59,43 @@ const getEventById = (req, res) => {
                                     <ns3:event>
                                         <ns3:eventId>${event.eventId}</ns3:eventId>
                                         <ns3:entityType>${event.entityType}</ns3:entityType>
-                                        <ns3:effectiveStartDate>${event.effectiveStartDate}</ns3:effectiveStartDate>
-                                        <ns3:publishedAt>${event.publishedAt}</ns3:publishedAt>
+                                        <ns3:effectiveStartDate>${new Date(event.effectiveStartDate).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:effectiveStartDate>
+                                        <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
                                         <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
                                         <ns3:repost>${event.repost}</ns3:repost>
                                         <ns3:entityKeys>
                 `
                 let entityKeys = '';
                 let eks = event.entityKeys;
-                Object.keys(eks).forEach((key)=> {
-                    console.log(eks)
-                    console.log(key)
-                    let entity = `
-                    <ns3:entityKey>
-                        <name>${key}</name>
-                        <value>${eks[key]}</value>
-                    </ns3:entityKey>
-                    `
-                    entityKeys += entity;
+                let values = [];
+
+                eks.forEach(element => {
+                    Object.keys(element).forEach((key)=> {
+                        let entity = `
+                            <ns3:entityKey>
+                                <name>${key}</name>
+                                <value>${element[key]}</value>
+                            </ns3:entityKey>
+                            `
+                        entityKeys += entity;
+                    });
                 });
 
                 let params = `</ns3:entityKeys>
                                 <ns3:params>`;
                 let pars = event.params;
-                for (const [key, value] of Object.entries(pars)){
-                    let param = `
-                    <ns3:param>
-                        <name>${key}</name>
-                        <value>${value}</value>
-                    </ns3:param>
-                `
-                params += param;
-                }
-   
+                pars.forEach(element => {
+                    Object.keys(element).forEach((key)=> {
+                        let param = `
+                                    <ns3:param>
+                                        <name>${key}</name>
+                                        <value>${element[key]}</value>
+                                    </ns3:param>
+                                `
+                        params += param;
+                    });
+                });
+
                 response += entityKeys;
                 response += params;
                 response += `   </ns3:params>`
@@ -102,8 +106,6 @@ const getEventById = (req, res) => {
                 res.type('application/xml')
                 res.status(200).send(response);
             } 
-            
-            
         }
     });
 }
