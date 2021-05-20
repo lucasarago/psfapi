@@ -1,7 +1,6 @@
 'use strict'
 
 const xml2js = require('xml2js');
-const event = require('../models/event');
 const Event = require('../models/event');
 
 const saveEvent = (req, res) => {
@@ -40,7 +39,7 @@ const getEvents = (req, res) => {
 const getEventById = (req, res) => {
     let eventId = req.params.id;
 
-    Event.findById(eventId, (err, event) => {
+    Event.findOne({eventId: eventId}, (err, event) => {
         if(err) res.status(500).send({ message: `Internal Server Error: ${err}` });
         else{
             if(!event) res.status(404).send({ message: `Event not found` });
@@ -67,7 +66,6 @@ const getEventById = (req, res) => {
                 `
                 let entityKeys = '';
                 let eks = event.entityKeys;
-                let values = [];
 
                 eks.forEach(element => {
                     Object.keys(element).forEach((key)=> {
@@ -110,8 +108,34 @@ const getEventById = (req, res) => {
     });
 }
 
+const editEvent = (req, res) => {
+    let eventId = req.params.id;
+    let update = req.body;
+    Event.findOne({eventId:eventId}, update, (err, eventUpdated) => {
+        if(err) res.status(500).send({ message: `Internal Server Error: ${err}` });
+        else{
+            if(!eventUpdated) res.status(404).send({ message: `Event not found` });
+            else res.status(200).send({ Result: { message: `The event was updated`, eventUpdated } });
+        }
+    });
+}
+
+const deleteEvent = (req, res) => {
+    let eventId = req.params.id;
+
+    Event.findOneAndRemove({eventId: eventId}, (err, eventDeleted) => {
+        if(err) res.status(500).send({ message: `Internal Server Error: ${err}` });
+        else{
+            if(!eventDeleted) res.status(404).send({ message: `Event not found` });
+            else res.status(200).send({ Result: { message: `The event was deleted`, eventDeleted } });
+        }
+    });
+}
+
 module.exports = {
     saveEvent,
     getEvents,
-    getEventById
+    getEventById,
+    editEvent,
+    deleteEvent
 }

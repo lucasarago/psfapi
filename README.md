@@ -1,6 +1,6 @@
 ﻿# API TO TEST EXTERNAL CALL IN PSF
 
-## EndPoints:
+## Employee EndPoints:
 
 > - ### Root:
 >> - psfexternal.ml/api/v1
@@ -18,3 +18,16 @@
 >> - psfexternal.ml/api/v1/perPerson/**id**
 > - ### Delete:
 >> - psfexternal.ml/api/v1/perPerson/**id**
+
+## Event EndPoints:
+
+> - ### Get all:
+>> - psfexternal.ml/api/v1/events
+> - ### Get by Id:
+>> - psfexternal.ml/api/v1/event/**id**
+> - ### Post:
+>> - psfexternal.ml/api/v1/event
+> - ### Put:
+>> - psfexternal.ml/api/v1/event/**id**
+> - ### Delete:
+>> - psfexternal.ml/api/v1/event/**id**

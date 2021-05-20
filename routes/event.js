@@ -7,5 +7,7 @@ var api = express.Router();
 api.post('/event', EventController.saveEvent);
 api.get('/events', EventController.getEvents);
 api.get('/event/:id', EventController.getEventById);
+api.put('/event/:id', EventController.editEvent);
+api.delete('/event/:id', EventController.deleteEvent);
 
 module.exports = api;
