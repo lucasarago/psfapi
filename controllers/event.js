@@ -47,7 +47,7 @@ const getEventById = (req, res) => {
                 let response = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                                 <ns3:ExternalEvent xmlns:ns6="http://www.boomi.com/connector/wss" xmlns:ns5="com.successfactors.alert" xmlns:ns7="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="com.successfactors.event.notification" xmlns:ns4="http://alert.successfactors.com" xmlns:ns3="http://notification.event.successfactors.com">
                                 <ns3:externalEventMeta>
-                                    <ns3:externalEventId>2dc67448-a1d9-4c31-8f04-bcb94bfe23b3</ns3:externalEventId>
+                                    <ns3:externalEventId>${Math.random().toString(36).substring(2, 10)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 14)}</ns3:externalEventId>
                                     <ns3:type>com.successfactors.Employment.AssignmentInformation.ReHire</ns3:type>
                                     <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
                                     <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
