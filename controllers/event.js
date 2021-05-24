@@ -45,24 +45,26 @@ const getEventById = (req, res) => {
             if(!event) res.status(404).send({ message: `Event not found` });
             else{
                 let response = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                                <ns3:ExternalEvent xmlns:ns6="http://www.boomi.com/connector/wss" xmlns:ns5="com.successfactors.alert" xmlns:ns7="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="com.successfactors.event.notification" xmlns:ns4="http://alert.successfactors.com" xmlns:ns3="http://notification.event.successfactors.com">
-                                <ns3:externalEventMeta>
-                                    <ns3:externalEventId>${Math.random().toString(36).substring(2, 10)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 14)}</ns3:externalEventId>
-                                    <ns3:type>com.successfactors.Employment.AssignmentInformation.ReHire</ns3:type>
-                                    <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
-                                    <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
-                                    <ns3:effective>current</ns3:effective>
-                                    <ns3:repost>${event.repost}</ns3:repost>
-                                </ns3:externalEventMeta>
-                                <ns3:events>
-                                    <ns3:event>
-                                        <ns3:eventId>${event.eventId}</ns3:eventId>
-                                        <ns3:entityType>${event.entityType}</ns3:entityType>
-                                        <ns3:effectiveStartDate>${new Date(event.effectiveStartDate).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:effectiveStartDate>
-                                        <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
-                                        <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
-                                        <ns3:repost>${event.repost}</ns3:repost>
-                                        <ns3:entityKeys>
+                                <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns6="http://www.boomi.com/connector/wss" xmlns:ns5="com.successfactors.alert" xmlns:ns7="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="com.successfactors.event.notification" xmlns:ns4="http://alert.successfactors.com" xmlns:ns3="http://notification.event.successfactors.com">
+                                    <soap:Body>
+                                        <ns3:ExternalEvent>
+                                            <ns3:externalEventMeta>
+                                                <ns3:externalEventId>${Math.random().toString(36).substring(2, 10)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 14)}</ns3:externalEventId>
+                                                <ns3:type>com.successfactors.Employment.AssignmentInformation.ReHire</ns3:type>
+                                                <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
+                                                <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
+                                                <ns3:effective>current</ns3:effective>
+                                                <ns3:repost>${event.repost}</ns3:repost>
+                                            </ns3:externalEventMeta>
+                                            <ns3:events>
+                                                <ns3:event>
+                                                    <ns3:eventId>${event.eventId}</ns3:eventId>
+                                                    <ns3:entityType>${event.entityType}</ns3:entityType>
+                                                    <ns3:effectiveStartDate>${new Date(event.effectiveStartDate).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:effectiveStartDate>
+                                                    <ns3:publishedAt>${new Date(event.publishedAt).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}</ns3:publishedAt>
+                                                    <ns3:publishedBy>${event.publishedBy}</ns3:publishedBy>
+                                                    <ns3:repost>${event.repost}</ns3:repost>
+                                                    <ns3:entityKeys>
                 `
                 let entityKeys = '';
                 let eks = event.entityKeys;
@@ -96,10 +98,13 @@ const getEventById = (req, res) => {
 
                 response += entityKeys;
                 response += params;
-                response += `   </ns3:params>`
-                response += `   </ns3:event>
-                                </ns3:events>
-                            </ns3:ExternalEvent>`
+                response += `       </ns3:params>`
+                response += `       </ns3:event>
+                                        </ns3:events>
+                                    </ns3:ExternalEvent>
+                                </soap:Body>
+                            </soap:Envelope>
+                            `
     
                 res.type('application/xml')
                 res.status(200).send(response);
