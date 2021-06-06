@@ -1,8 +1,17 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { CarouselComponent } from './templates/carousel/carousel.component';
 
+const routes: Routes = [
+  {path: '', component: CarouselComponent},
 
-const routes: Routes = [];
+  {
+    path: 'events', 
+    loadChildren: () => import ('./modules/events/events.module').then(e => e.EventsModule) 
+  },
+
+  {path: '**', redirectTo: ''}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

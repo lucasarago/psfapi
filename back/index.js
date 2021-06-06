@@ -2,7 +2,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 const app = require('./app');
 
 const Event = require('./models/event');
