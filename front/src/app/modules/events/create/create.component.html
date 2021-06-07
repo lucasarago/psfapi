@@ -1,1 +1,115 @@
-<p>create works!</p>
+<div class="container eventForm">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="row">Create New Event</h2>
+        </div>
+        <div class="col-6">
+            <div class="alert alert-danger mb-3 col-6" role="alert" 
+            *ngIf="((eventId.touched || eventId.dirty) && eventId.invalid) || 
+            ((entityType.touched || entityType.dirty) && entityType.invalid) ||
+            ((effectiveStartDate.touched || effectiveStartDate.dirty) && effectiveStartDate.invalid) ||
+            ((publishedAt.touched || publishedAt.dirty) && publishedAt.invalid) ||
+            ((publishedBy.touched || publishedBy.dirty) && publishedBy.invalid) ||
+            ((repost.touched || repost.dirty) && repost.invalid)">
+                All the fields are required!
+            </div>
+        </div>
+    </div>
+    <form class="form" [formGroup] = "newEvent" (ngSubmit) = "saveNewEvent()">
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="eventId" class="form-label">Event Id</label>
+          <input formControlName = "eventId" type="text" class="validate form-control" id="eventId" required/>
+        </div>
+        <div class="mb-3 col-6">
+          <label for="entityType" class="form-label">Entity Type</label>
+          <input formControlName = "entityType" type="text" class="validate form-control" id="entityType" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="effectiveStartDate" class="form-label">Effective Start Date</label>
+          <input formControlName = "effectiveStartDate"  type="date" class="validated form-control" id="effectiveStartDate" />
+        </div>
+        <div class="mb-3 col-6">
+          <label for="publishedAt" class="form-label">Published At</label>
+          <input formControlName = "publishedAt"  type="date" class="validate form-control" id="publishedAt" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="publishedBy" class="form-label">Published By</label>
+          <input formControlName = "publishedBy" type="text" class="validate form-control" id="publishedBy" />
+        </div>
+        <div class="mb-3 col-6">
+          <label for="repost" class="form-label">Repost</label>
+          <select formControlName = "publishedBy" class="validate form-select" id="repost" >
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+            <div class="row-form">
+                <h6>Entity Keys</h6>
+                <button type="button" class="btn btn-warning" (click)="addRowEntityK()">Add Param</button>
+                <button type="button" class="btn btn-success" (click)="deleteRowEntityK()">Delete Param</button>
+            </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody id ="tbodyRowEK">
+              <tr>
+                <th scope="row">1</th>
+                <td>
+                    <input type="text" class="form-control" id=`entityKeyName${i}` />
+                </td>
+                <td>
+                    <input type="text" class="form-control" id=`entityKeyValue${i}` />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mb-3 col-6">
+            <div class="row-form">
+                <h6>Params</h6>  
+                <button type="button" class="btn btn-warning" (click)="addRowParams()">Add Param</button>
+                <button type="button" class="btn btn-success" (click)="deleteRowParams()">Delete Param</button>
+            </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody id ="tbodyRowParams">
+              <tr>
+                <th scope="row">1</th>
+                <td>
+                    <input type="text" class="form-control" id=`paramName${i}`/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id=`paramValue${i}`/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-3">
+          <button type="submit" class="btn btn-primary" (onSubmit)="saveNewEvent()">Save</button>
+          <button type="button" class="btn btn-danger" routerLink = "/events/allevents">Cancel</button>
+        </div>   
+      </div>
+    </form>
+  </div>

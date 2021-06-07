@@ -9,5 +9,6 @@ api.get('/events', EventController.getEvents);
 api.get('/event/:id', EventController.getEventById);
 api.put('/event/:id', EventController.editEvent);
 api.delete('/event/:id', EventController.deleteEvent);
+api.get('/events/:id', EventController.getEventByIdFront);
 
 module.exports = api;

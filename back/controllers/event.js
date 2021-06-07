@@ -70,30 +70,26 @@ const getEventById = (req, res) => {
                 let eks = event.entityKeys;
 
                 eks.forEach(element => {
-                    Object.keys(element).forEach((key)=> {
-                        let entity = `
+                    let entity = `
                             <ns3:entityKey>
-                                <name>${key}</name>
-                                <value>${element[key]}</value>
+                                <name>${element.name}</name>
+                                <value>${element.value}</value>
                             </ns3:entityKey>
                             `
                         entityKeys += entity;
-                    });
                 });
 
                 let params = `</ns3:entityKeys>
                                 <ns3:params>`;
                 let pars = event.params;
                 pars.forEach(element => {
-                    Object.keys(element).forEach((key)=> {
-                        let param = `
+                    let param = `
                                     <ns3:param>
-                                        <name>${key}</name>
-                                        <value>${element[key]}</value>
+                                        <name>${element.name}</name>
+                                        <value>${element.value}</value>
                                     </ns3:param>
                                 `
                         params += param;
-                    });
                 });
 
                 response += entityKeys;
@@ -137,10 +133,23 @@ const deleteEvent = (req, res) => {
     });
 }
 
+const getEventByIdFront = (req, res) => {
+    let eventId = req.params.id;
+
+    Event.findOne({eventId: eventId}, (err, event) => {
+        if(err) res.status(500).send({ message: `Internal Server Error: ${err}` });
+        else{
+            if(!event) res.status(404).send({ message: `Event not found` });
+            else res.status(200).send(event);
+        }
+    });
+}
+
 module.exports = {
     saveEvent,
     getEvents,
     getEventById,
     editEvent,
-    deleteEvent
+    deleteEvent,
+    getEventByIdFront
 }

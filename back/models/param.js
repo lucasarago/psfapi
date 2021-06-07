@@ -3,9 +3,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var EntityKeySchema = Schema({
+var ParamSchema = Schema({
     name: String,
     value: String 
 });
 
-module.exports = mongoose.model('EntityKey', EntityKeySchema);
+module.exports = mongoose.model('Param', ParamSchema);

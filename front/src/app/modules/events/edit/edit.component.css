@@ -17,13 +17,3 @@ button{
     margin-right: 0.2rem;
     margin-left: 0.2rem;
 }
-
-.row-form{
-    display: flex;
-    flex-direction: row;
-}
-
-.row-form button{
-    width: 10rem;
-    margin-left: 5rem;
-}

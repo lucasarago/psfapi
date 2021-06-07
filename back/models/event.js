@@ -1,6 +1,8 @@
 'use strict'
 
 var mongoose = require('mongoose');
+const EntityKey = require('../models/entityKey');
+const Param = require('../models/param');
 var Schema = mongoose.Schema;
 
 var EventSchema = Schema({
@@ -10,8 +12,8 @@ var EventSchema = Schema({
     publishedAt: Date,
     publishedBy: String,
     repost: Boolean,
-    entityKeys: { type: Array, default: []},
-    params: { type: Array, default: []}
+    entityKeys: [ {name: String, value: String }],
+    params: [ {name: String, value: String } ]
 });
 
 module.exports = mongoose.model('Event', EventSchema);

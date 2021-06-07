@@ -1,0 +1,90 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<div class="container eventForm">
+    <form>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="eventId" class="form-label">Event Id</label>
+          <input type="text"class="form-control" id="eventId" value="{{ event.eventId }}" required/>
+        </div>
+        <div class="mb-3 col-6">
+          <label for="entityType" class="form-label">Entity Type</label>
+          <input type="text" class="form-control" id="entityType" value ="{{ event.entityType }}"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="effectiveStartDate" class="form-label">Effective Start Date</label>
+          <input type="datetime" class="form-control" id="effectiveStartDate" value = "{{ event.effectiveStartDate }}" required/>
+        </div>
+        <div class="mb-3 col-6">
+          <label for="publishedAt" class="form-label">Published At</label>
+          <input type="datetime" class="form-control" id="publishedAt" value = "{{ event.publishedAt }}" required/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="publishedBy" class="form-label">Published By</label>
+          <input type="text" class="form-control" id="publishedBy" value ="{{ event.publishedBy }}" required/>
+        </div>
+        <div class="mb-3 col-6">
+          <label for="repost" class="form-label">Repost</label>
+          <input type="text" class="form-control" id="repost" value = "{{ event.repost }}" required/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <h6>Entity Keys</h6>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ek of event.entityKeys; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>
+                    <input type="text" class="form-control" id=`entityKeyName${i}` value="{{ ek.name }}" required/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id=`entityKeyValue${i}` value="{{ ek.value }}" required/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mb-3 col-6">
+          <h6>Params</h6>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of event.params; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>
+                    <input type="text" class="form-control" id=`paramName${i}` value="{{ p.name }}" required/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id=`paramValue${i}` value="{{ p.value }}" required/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-3">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-danger" routerLink = "/events/details/{{ event.eventId }}">Cancel</button>
+        </div>   
+      </div>
+    </form>
+  </div>
+  

@@ -1,0 +1,32 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<div class="mycontainer">
+  <button type="button" class="btn btn-primary" routerLink='/events/newevent'>Create Event</button>
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Event Id</th>
+        <th scope="col">Entity Type</th>
+        <th scope="col">Effective Start Date</th>
+        <th scope="col">Published At</th>
+        <th scope="col">Published By</th>
+        <th scope="col">Repost</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of eventsList; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ e.eventId }}</td>
+        <td>{{ e.entityType }}</td>
+        <td>{{ e.effectiveStartDate }}</td>
+        <td>{{ e.publishedAt }}</td>
+        <td>{{ e.publishedBy }}</td>
+        <td>{{ e.repost }}</td>
+        <td class="actionButtons">
+          <button type="button" class="btn btn-primary" routerLink = '/events/details/{{ e.eventId }}'>Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
