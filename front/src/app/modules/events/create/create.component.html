@@ -56,7 +56,7 @@
                 <button type="button" class="btn btn-warning" (click)="addRowEntityK()">Add Param</button>
                 <button type="button" class="btn btn-success" (click)="deleteRowEntityK()">Delete Param</button>
             </div>
-          <table class="table">
+          <table class="table" id="tEK">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -65,15 +65,6 @@
               </tr>
             </thead>
             <tbody id ="tbodyRowEK">
-              <tr>
-                <th scope="row">1</th>
-                <td>
-                    <input type="text" class="form-control" id=`entityKeyName${i}` />
-                </td>
-                <td>
-                    <input type="text" class="form-control" id=`entityKeyValue${i}` />
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -83,7 +74,7 @@
                 <button type="button" class="btn btn-warning" (click)="addRowParams()">Add Param</button>
                 <button type="button" class="btn btn-success" (click)="deleteRowParams()">Delete Param</button>
             </div>
-          <table class="table">
+          <table class="table" id="tparams">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -92,15 +83,6 @@
               </tr>
             </thead>
             <tbody id ="tbodyRowParams">
-              <tr>
-                <th scope="row">1</th>
-                <td>
-                    <input type="text" class="form-control" id=`paramName${i}`/>
-                </td>
-                <td>
-                    <input type="text" class="form-control" id=`paramValue${i}`/>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>

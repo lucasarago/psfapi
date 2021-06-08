@@ -17,3 +17,7 @@ button{
     margin-right: 0.2rem;
     margin-left: 0.2rem;
 }
+
+#btn-table{
+    width: 3rem;
+}

@@ -40,4 +40,13 @@ ngOnInit(): void {
   
 }
 
+public editEK(name, value){
+  console.log(name, value)
+  let modal = document.getElementById("exampleModal")
+  console.log(modal.getElementsByTagName('input'))
+  document.getElementById("im-n").innerHTML = name;
+  document.getElementById("im-v").innerHTML = value;
+
+}
+
 }

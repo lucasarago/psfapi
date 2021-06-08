@@ -14,8 +14,8 @@ export class CreateComponent implements OnInit {
   constructor(public route:Router, public eventService: EventsService) { }
 
   newEvent: FormGroup;
-  rowCountParams: number = 1;
-  rowCountEk: number = 1;
+  rowCountParams: number = 0;
+  rowCountEk: number = 0;
   ngOnInit(): void {
     this.newEvent = this.formGroupEventCreator();
   }
@@ -34,7 +34,7 @@ export class CreateComponent implements OnInit {
   }
 
   public saveNewEvent():void{
-    console.log(this.newEvent)
+    console.log(this.entityKeys)
     if(this.newEvent.valid){
       let event = this.buildEventData();
       this.eventService.saveEvent(event)
@@ -95,13 +95,15 @@ export class CreateComponent implements OnInit {
   public addRowParams(){
     this.rowCountParams += 1;
     let rows = `
-    <th scope="row">${this.rowCountParams}</th>
-          <td>
-              <input type="text" class="form-control" id=paramName${this.rowCountParams.toString()}/>
-          </td>
-          <td>
-              <input type="text" class="form-control" id=paramValue${this.rowCountParams.toString()}/>
-          </td>
+    <tr>
+      <th scope="row">${this.rowCountParams}</th>
+            <td>
+                <input type="text" class="form-control" id=paramName${this.rowCountParams.toString()}/>
+            </td>
+            <td>
+                <input type="text" class="form-control" id=paramValue${this.rowCountParams.toString()}/>
+            </td>
+    </tr>
     `
     document.getElementById('tbodyRowParams').innerHTML += rows;
   }
@@ -115,20 +117,34 @@ export class CreateComponent implements OnInit {
   public addRowEntityK(){
     this.rowCountEk += 1;
     let rows = `
-    <th scope="row">${this.rowCountEk}</th>
-          <td>
-              <input type="text" class="form-control" id=paramName${this.rowCountEk.toString()}/>
-          </td>
-          <td>
-              <input type="text" class="form-control" id=paramValue${this.rowCountEk.toString()}/>
-          </td>
+    <tr>
+      <th scope="row">${this.rowCountEk}</th>
+            <td>
+                <input type="text" class="form-control" id=ekName${this.rowCountEk.toString()}/>
+            </td>
+            <td>
+                <input type="text" class="form-control" id=ekValue${this.rowCountEk.toString()}/>
+            </td>
+    </tr>
     `
     document.getElementById('tbodyRowEK').innerHTML += rows;
+    this.getEk();
   }
 
   public deleteRowEntityK(){
     let table = document.getElementById('tbodyRowEK');
     table.removeChild(table.lastElementChild);
     this.rowCountEk -= 1;
+  }
+
+  public getEk(){
+    let container = document.getElementById('tEK');
+    console.log(container)
+    let tds = container.querySelectorAll("input");
+    console.log(tds)
+    console.log(document.getElementById('ekValue1'))
+   tds.forEach(element => {
+      console.log(element.value)
+    });
   }
 }

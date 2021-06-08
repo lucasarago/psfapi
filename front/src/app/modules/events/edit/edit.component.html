@@ -40,16 +40,21 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let ek of event.entityKeys; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
                 <td>
-                    <input type="text" class="form-control" id=`entityKeyName${i}` value="{{ ek.name }}" required/>
+                    <input type="text" class="form-control" id=`entityKeyName${i}` value="{{ ek.name }}" disabled/>
                 </td>
                 <td>
-                    <input type="text" class="form-control" id=`entityKeyValue${i}` value="{{ ek.value }}" required/>
+                    <input type="text" class="form-control" id=`entityKeyValue${i}` value="{{ ek.value }}" disabled/>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary" id="btn-table" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editEK(ek.name, ek.value)"></button>
+                  <button type="button" class="btn btn-danger" id="btn-table"></button>
                 </td>
               </tr>
             </tbody>
@@ -81,10 +86,30 @@
       </div>
       <div class="row">
         <div class="mb-3 col-3">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">Edit</button>
           <button type="button" class="btn btn-danger" routerLink = "/events/details/{{ event.eventId }}">Cancel</button>
         </div>   
       </div>
     </form>
   </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Entity Key</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="im-n" class="form-label">Name</label>
+        <input type="text" class="form-control" id="im-n" required/>
+        <label for="im-v" class="form-label">Value</label>
+        <input type="text" class="form-control" id="im-v" required/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
   
