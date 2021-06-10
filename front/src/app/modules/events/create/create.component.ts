@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { eventDTO } from "src/app/models/events";
+import { paramDTO } from "src/app/models/param";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventsService } from 'src/app/services/events.service';
@@ -16,6 +17,10 @@ export class CreateComponent implements OnInit {
   newEvent: FormGroup;
   rowCountParams: number = 0;
   rowCountEk: number = 0;
+  paramsDTO: paramDTO[] = [];
+  name: string = '';
+  value: string = '';
+
   ngOnInit(): void {
     this.newEvent = this.formGroupEventCreator();
   }
@@ -56,7 +61,7 @@ export class CreateComponent implements OnInit {
       publishedBy: this.publishedBy.value,
       repost: this.repost.value,
       entityKeys: this.entityKeys.value,
-      params: this.params.value
+      params: this.params
     }
   }
 
@@ -89,29 +94,37 @@ export class CreateComponent implements OnInit {
   }
 
   public get params(){
-    return this.newEvent.get('params');
+    return this.paramsDTO;
   }
 
-  public addRowParams(){
+  public addRowParams(name, value){
     this.rowCountParams += 1;
     let rows = `
     <tr>
       <th scope="row">${this.rowCountParams}</th>
             <td>
-                <input type="text" class="form-control" id=paramName${this.rowCountParams.toString()}/>
+                <input type="text" class="form-control" id=paramName${this.rowCountParams.toString()} value="${name}" disabled/>
             </td>
             <td>
-                <input type="text" class="form-control" id=paramValue${this.rowCountParams.toString()}/>
+                <input type="text" class="form-control" id=paramValue${this.rowCountParams.toString()} value="${value}" disabled/>
+            </td>
+            <td>
+                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams()"></i>
             </td>
     </tr>
     `
     document.getElementById('tbodyRowParams').innerHTML += rows;
   }
 
-  public deleteRowParams(){
+  public deleteRowParams(name){
+    console.log("name: " +  name)
     let table = document.getElementById('tbodyRowParams');
     table.removeChild(table.lastElementChild);
     this.rowCountParams -= 1;
+    const index = this.paramsDTO.indexOf(name, 0);
+    if ( index > -1){
+      this.paramsDTO.splice(index, 1);
+    }
   }
 
   public addRowEntityK(){
@@ -146,5 +159,16 @@ export class CreateComponent implements OnInit {
    tds.forEach(element => {
       console.log(element.value)
     });
+  }
+
+  public setParam(){
+    let param = {
+      name: this.name,
+      value:this.value
+    }
+    param.name = this.name;
+    param.value = this.value;
+    this.paramsDTO.push(param)
+    this.addRowParams(this.name, this.value);
   }
 }

@@ -71,8 +71,9 @@
         <div class="mb-3 col-6">
             <div class="row-form">
                 <h6>Params</h6>  
-                <button type="button" class="btn btn-warning" (click)="addRowParams()">Add Param</button>
-                <button type="button" class="btn btn-success" (click)="deleteRowParams()">Delete Param</button>
+                <div class="row">
+                  <i class="bi bi-plus-square-fill" id="plus-one" data-bs-toggle="modal" data-bs-target="#modalAdd"></i>
+                </div>
             </div>
           <table class="table" id="tparams">
             <thead>
@@ -95,3 +96,22 @@
       </div>
     </form>
   </div>
+  <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAddLabel">Add</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="im-n" class="form-label">Name</label>
+          <input type="text" class="form-control" id="im-n" [(ngModel)]="name" required/>
+          <label for="im-v" class="form-label">Value</label>
+          <input type="text" class="form-control" id="im-v" [(ngModel)]="value" required/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="setParam()" data-bs-dismiss="modal">Save changes</button>
+        </div>
+      </div>
+    </div>
