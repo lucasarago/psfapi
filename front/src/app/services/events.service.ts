@@ -28,4 +28,8 @@ export class EventsService {
       })
     });
   }
+
+  public deleteEvent(eventId: String): Observable<eventDTO>{
+    return this.http.delete<eventDTO>(`${environment.apiURL}event/${eventId}`);
+  } 
 }

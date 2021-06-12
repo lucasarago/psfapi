@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from 'src/app/services/events.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { eventDTO } from 'src/app/models/events';
 import { NgxSpinnerService } from "ngx-spinner";
 
@@ -13,7 +13,8 @@ export class DetailsComponent implements OnInit {
 
   constructor(private eventService: EventsService,
       private activatedRoute: ActivatedRoute,
-      private spinner: NgxSpinnerService) { }
+      private spinner: NgxSpinnerService,
+      private router: Router) { }
 
       event: eventDTO = {
         eventId : null,
@@ -39,6 +40,12 @@ export class DetailsComponent implements OnInit {
     }, 500);
   }
 
-
+  public deleteEvent(eventId: String):void{
+    this.eventService.deleteEvent(eventId)
+    .subscribe(event => {
+      alert("Event deleted");
+      this.router.navigate(['events/allevents']);
+    });
+  }
 
 }

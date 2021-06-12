@@ -43,28 +43,42 @@
         </div>
         <div class="mb-3 col-6">
           <label for="repost" class="form-label">Repost</label>
-          <select formControlName = "publishedBy" class="validate form-select" id="repost" >
-            <option value="true">True</option>
-            <option value="false">False</option>
+          <select formControlName = "repost" class="validate form-select" id="repost" >
+            <option value=true>True</option>
+            <option value=false>False</option>
           </select>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-6">
-            <div class="row-form">
-                <h6>Entity Keys</h6>
-                <button type="button" class="btn btn-warning" (click)="addRowEntityK()">Add Param</button>
-                <button type="button" class="btn btn-success" (click)="deleteRowEntityK()">Delete Param</button>
+          <div class="row-form">
+            <h6>Entity keys</h6>  
+            <div class="row">
+              <i class="bi bi-plus-square-fill" id="plus-one" data-bs-toggle="modal" data-bs-target="#modalAddEk"></i>
             </div>
-          <table class="table" id="tEK">
+        </div>
+          <table class="table" id="tEk">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
-            <tbody id ="tbodyRowEK">
+            <tbody id ="tbodyEk" *ngIf="emptyEk">
+              <tr *ngFor="let ek of eksDTO, let i = index;" >  
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                  <input type="text" class="form-control" value={{ek?.name}} disabled/>
+              </td>
+              <td>
+                  <input type="text" class="form-control" value={{ek?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowEntityK(ek?.name)"></i>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -81,9 +95,22 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
-            <tbody id ="tbodyRowParams">
+            <tbody id ="tbodyRowParams" *ngIf="emptyP">
+              <tr *ngFor="let p of paramsDTO, let i = index;" >  
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                  <input type="text" class="form-control" value={{p?.name}} disabled/>
+              </td>
+              <td>
+                  <input type="text" class="form-control" value={{p?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams(p?.name)"></i>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -100,7 +127,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalAddLabel">Add</h5>
+          <h5 class="modal-title" id="modalAddLabel">Add Param</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -111,7 +138,28 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" (click)="setParam()" data-bs-dismiss="modal">Save changes</button>
+          <button type="button" class="btn btn-primary" (click)="setParam()" data-bs-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="modal fade" id="modalAddEk" tabindex="-1" aria-labelledby="modalAddLabelEk" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalAddLabelEk">Add Entity Key</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="im-nek" class="form-label">Name</label>
+            <input type="text" class="form-control" id="im-nek" [(ngModel)]="name" required/>
+            <label for="im-vek" class="form-label">Value</label>
+            <input type="text" class="form-control" id="im-vek" [(ngModel)]="value" required/>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="setEk()" data-bs-dismiss="modal">Save</button>
+          </div>
         </div>
       </div>
     </div>
