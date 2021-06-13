@@ -43,7 +43,11 @@ export class DetailsComponent implements OnInit {
   public deleteEvent(eventId: String):void{
     this.eventService.deleteEvent(eventId)
     .subscribe(event => {
-      alert("Event deleted");
+      let modal = document.getElementById('alertDelete');
+      modal.hidden = false;
+      setTimeout(() => {
+        modal.hidden = true;
+      }, 3000);
       this.router.navigate(['events/allevents']);
     });
   }

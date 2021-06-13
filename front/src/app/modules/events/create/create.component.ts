@@ -45,9 +45,15 @@ export class CreateComponent implements OnInit {
       let event = this.buildEventData();
       this.eventService.saveEvent(event)
       .subscribe(item => {
-        alert('Created');
-        this.route.navigate(["events/allevents"]);
-      });
+        let modal = document.getElementById('alertCreate');
+        modal.hidden = false;
+        setTimeout(() => {
+          modal.hidden = true;
+        }, 2000);
+        setTimeout(() => {
+          this.route.navigate(["events/allevents"]);
+        }, 2000);
+        });
     }else{
       alert('Error')
     }

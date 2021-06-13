@@ -1,5 +1,25 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 <div class="container eventForm">
+  <div class="alert alert-info alert-dismissible fade show" role="alert" id='alertCreate' hidden>
+    <strong>Event Edited!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <div class="row">
+    <div class="col-6">
+        <h2 class="row">Create New Event</h2>
+    </div>
+    <div class="col-6">
+        <div class="alert alert-danger mb-3 col-6" role="alert" 
+        *ngIf="((eventId.touched || eventId.dirty) && eventId.invalid) || 
+        ((entityType.touched || entityType.dirty) && entityType.invalid) ||
+        ((effectiveStartDate.touched || effectiveStartDate.dirty) && effectiveStartDate.invalid) ||
+        ((publishedAt.touched || publishedAt.dirty) && publishedAt.invalid) ||
+        ((publishedBy.touched || publishedBy.dirty) && publishedBy.invalid) ||
+        ((repost.touched || repost.dirty) && repost.invalid)">
+            All the fields are required!
+        </div>
+    </div>
+    </div>
     <form>
       <div class="row">
         <div class="mb-3 col-6">
@@ -28,13 +48,21 @@
         </div>
         <div class="mb-3 col-6">
           <label for="repost" class="form-label">Repost</label>
-          <input type="text" class="form-control" id="repost" value = "{{ event.repost }}" required/>
+          <select formControlName = "repost" class="validate form-select" id="repost" >
+            <option value=true>True</option>
+            <option value=false>False</option>
+          </select>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-6">
-          <h6>Entity Keys</h6>
-          <table class="table">
+          <div class="row-form">
+            <h6>Entity keys</h6>  
+            <div class="row">
+              <i class="bi bi-plus-square-fill" id="plus-one" data-bs-toggle="modal" data-bs-target="#modalAddEk"></i>
+            </div>
+          </div>
+          <table class="table" id="tEK">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -43,26 +71,30 @@
                 <th scope="col">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let ek of event.entityKeys; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td>
-                    <input type="text" class="form-control" id=`entityKeyName${i}` value="{{ ek.name }}" disabled/>
-                </td>
-                <td>
-                    <input type="text" class="form-control" id=`entityKeyValue${i}` value="{{ ek.value }}" disabled/>
-                </td>
-                <td>
-                  <button type="button" class="btn btn-primary" id="btn-table" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editEK(ek.name, ek.value)"></button>
-                  <button type="button" class="btn btn-danger" id="btn-table"></button>
-                </td>
-              </tr>
+            <tbody id ="tbodyEk" *ngIf="emptyEk">
+              <tr *ngFor="let ek of eksDTO, let i = index;" >  
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                  <input type="text" class="form-control" value={{ek?.name}} disabled/>
+              </td>
+              <td>
+                  <input type="text" class="form-control" value={{ek?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowEntityK(ek?.name)"></i>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
         <div class="mb-3 col-6">
-          <h6>Params</h6>
-          <table class="table">
+          <div class="row-form">
+            <h6>Params</h6>  
+            <div class="row">
+              <i class="bi bi-plus-square-fill" id="plus-one" data-bs-toggle="modal" data-bs-target="#modalAdd"></i>
+            </div>
+          </div>
+          <table class="table" id="tparams">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -70,46 +102,68 @@
                 <th scope="col">Value</th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let p of event.params; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td>
-                    <input type="text" class="form-control" id=`paramName${i}` value="{{ p.name }}" required/>
-                </td>
-                <td>
-                    <input type="text" class="form-control" id=`paramValue${i}` value="{{ p.value }}" required/>
-                </td>
-              </tr>
+            <tbody id ="tbodyRowParams" *ngIf="emptyP">
+              <tr *ngFor="let p of paramsDTO, let i = index;" >  
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                  <input type="text" class="form-control" value={{p?.name}} disabled/>
+              </td>
+              <td>
+                  <input type="text" class="form-control" value={{p?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams(p?.name)"></i>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-3">
-          <button type="submit" class="btn btn-primary">Edit</button>
+          <button type="submit" class="btn btn-primary">Save</button>
           <button type="button" class="btn btn-danger" routerLink = "/events/details/{{ event.eventId }}">Cancel</button>
         </div>   
       </div>
     </form>
   </div>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Entity Key</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <label for="im-n" class="form-label">Name</label>
-        <input type="text" class="form-control" id="im-n" required/>
-        <label for="im-v" class="form-label">Value</label>
-        <input type="text" class="form-control" id="im-v" required/>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+  <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAddLabel">Add Param</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="im-n" class="form-label">Name</label>
+          <input type="text" class="form-control" id="im-n" [(ngModel)]="name" required/>
+          <label for="im-v" class="form-label">Value</label>
+          <input type="text" class="form-control" id="im-v" [(ngModel)]="value" required/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="setParam()" data-bs-dismiss="modal">Save</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-  
+    <div class="modal fade" id="modalAddEk" tabindex="-1" aria-labelledby="modalAddLabelEk" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalAddLabelEk">Add Entity Key</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="im-nek" class="form-label">Name</label>
+            <input type="text" class="form-control" id="im-nek" [(ngModel)]="name" required/>
+            <label for="im-vek" class="form-label">Value</label>
+            <input type="text" class="form-control" id="im-vek" [(ngModel)]="value" required/>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="setEk()" data-bs-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
