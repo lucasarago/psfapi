@@ -6,7 +6,7 @@
   </div>
   <div class="row">
     <div class="col-6">
-        <h2 class="row">Create New Event</h2>
+        <h2 class="row">Edit Event</h2>
     </div>
     <div class="col-6">
         <div class="alert alert-danger mb-3 col-6" role="alert" 
@@ -20,7 +20,7 @@
         </div>
     </div>
     </div>
-    <form>
+    <form class="form" [formGroup] = "newEvent" (ngSubmit) = "editEvent()">
       <div class="row">
         <div class="mb-3 col-6">
           <label for="eventId" class="form-label">Event Id</label>
@@ -48,7 +48,7 @@
         </div>
         <div class="mb-3 col-6">
           <label for="repost" class="form-label">Repost</label>
-          <select formControlName = "repost" class="validate form-select" id="repost" >
+          <select formControlName = "repost" class="validate form-select" id="repost" value="{{ event.repost }}">
             <option value=true>True</option>
             <option value=false>False</option>
           </select>
@@ -69,6 +69,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
                 <th scope="col">Actions</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody id ="tbodyEk" *ngIf="emptyEk">
@@ -79,6 +80,9 @@
               </td>
               <td>
                   <input type="text" class="form-control" value={{ek?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(ek?.name, ek?.value)"></i>
               </td>
               <td>
                 <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowEntityK(ek?.name)"></i>
@@ -100,6 +104,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
+                <th scope="col">Actions</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody id ="tbodyRowParams" *ngIf="emptyP">
@@ -110,6 +116,9 @@
               </td>
               <td>
                   <input type="text" class="form-control" value={{p?.value}} disabled/>
+              </td>
+              <td>
+                <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(p?.name, p?.value)"></i>
               </td>
               <td>
                 <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams(p?.name)"></i>
@@ -156,9 +165,9 @@
           </div>
           <div class="modal-body">
             <label for="im-nek" class="form-label">Name</label>
-            <input type="text" class="form-control" id="im-nek" [(ngModel)]="name" required/>
+            <input type="text" class="form-control" id="im-nek" [(ngModel)]="name" value="{{ name }}" required/>
             <label for="im-vek" class="form-label">Value</label>
-            <input type="text" class="form-control" id="im-vek" [(ngModel)]="value" required/>
+            <input type="text" class="form-control" id="im-vek" [(ngModel)]="value" value="{{ value }}" required/>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

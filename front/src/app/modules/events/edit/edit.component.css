@@ -21,3 +21,35 @@ button{
 #btn-table{
     width: 3rem;
 }
+
+.row-form{
+    display: flex;
+    flex-direction: row;
+}
+
+.row-form button{
+    width: 10rem;
+    margin-left: 5rem;
+}
+
+#plus-one{
+    margin-left: 3rem;
+    width: 3rem;
+    display: flex;
+    flex-direction: row;
+    font-size: 2rem;
+    justify-content: space-around;
+    color: #ffc107;
+    cursor: pointer;
+}
+
+#plus-two{
+    margin-left: 1rem;
+    display: flex;
+    width: 3rem;
+    flex-direction: row;
+    font-size: 2rem;
+    justify-content: space-around;
+    color: #dc3545;
+    cursor: pointer;
+}

@@ -48,11 +48,12 @@ ngOnInit(): void {
       this.activatedRoute.params.subscribe(params => {
         this.eventService.getEventById(params.id).subscribe(eventDetails => {
           this.event = eventDetails;
+          this.paramsDTO = eventDetails.params;
+          this.eksDTO = eventDetails.entityKeys;
         })
       })
       this.spinner.hide();
     }, 500);
-  
 }
 
 public formGroupEventCreator(): FormGroup {
@@ -182,6 +183,11 @@ private deleteEK(name){
   this.eksDTO.forEach((ek, index) => {
     if(ek.name == name) delete this.eksDTO[index];
    });
+}
+
+setModalData(name, value){
+    this.name = name;
+    this.value = value;   
 }
 
 }
