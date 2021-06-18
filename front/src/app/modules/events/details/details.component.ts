@@ -58,7 +58,10 @@ export class DetailsComponent implements OnInit {
       fetch('https://ppdocd4d3bda9f.us2.hana.ondemand.com/generator/ppdocservice', 
       {method: 'POST',
         headers: new Headers({
-          'Content-Type': 'text/xml'
+          'Content-Type': 'text/xml',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Headers': 'Content-Type'
         }),
     body: event })
     .then(item => {
