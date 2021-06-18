@@ -32,4 +32,10 @@ export class EventsService {
   public deleteEvent(eventId: String): Observable<eventDTO>{
     return this.http.delete<eventDTO>(`${environment.apiURL}event/${eventId}`);
   } 
+
+  public getEventXml(eventId: string): Observable<string>{
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8' );
+    return this.http.get(`${environment.apiURL}event/${eventId}`, {headers, responseType: 'text'});
+  }
+
 }

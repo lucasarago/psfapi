@@ -52,4 +52,18 @@ export class DetailsComponent implements OnInit {
     });
   }
 
+  sendInfoPSF(eventId){
+    this.eventService.getEventXml(eventId)
+    .subscribe(event => {
+      fetch('https://ppdocd4d3bda9f.us2.hana.ondemand.com/generator/ppdocservice', 
+      {method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'text/xml'
+        }),
+    body: event })
+    .then(item => {
+      console.log(item);
+    });
+  })
+};
 }

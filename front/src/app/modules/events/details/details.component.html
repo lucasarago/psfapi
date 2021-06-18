@@ -1,5 +1,8 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
 <div class="container eventForm">
+  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="sendInfoPSF(event.eventId)">Send</button>
+  <hr size="6" width="100%" color="black">  
   <div class="alert alert-danger alert-dismissible fade show" role="alert" id='alertDelete' hidden>
     <strong>Event Deleted!</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
