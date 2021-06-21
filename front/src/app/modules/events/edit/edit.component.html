@@ -20,35 +20,35 @@
         </div>
     </div>
     </div>
-    <form class="form" [formGroup] = "newEvent" (ngSubmit) = "editEvent()">
+    <form class="form" (ngSubmit) = "editEvent()">
       <div class="row">
         <div class="mb-3 col-6">
-          <label for="eventId" class="form-label">Event Id</label>
-          <input type="text"class="form-control" id="eventId" value="{{ event.eventId }}" required/>
+          <label for="eventId" class="form-label">Event Id</label>       
+          <input type="text" class="validate form-control" [(ngModel)]="event.eventId" name="eventId"  required/>
         </div>
         <div class="mb-3 col-6">
           <label for="entityType" class="form-label">Entity Type</label>
-          <input type="text" class="form-control" id="entityType" value ="{{ event.entityType }}"/>
+          <input type="text" class="validate form-control" name="entityType" [(ngModel)]="event.entityType"/>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-6">
           <label for="effectiveStartDate" class="form-label">Effective Start Date</label>
-          <input type="datetime" class="form-control" id="effectiveStartDate" value = "{{ event.effectiveStartDate }}" required/>
+          <input type="date" class="validated form-control" name="effectiveStartDate" [(ngModel)] = "newEffectiveStartDate" required/>
         </div>
         <div class="mb-3 col-6">
           <label for="publishedAt" class="form-label">Published At</label>
-          <input type="datetime" class="form-control" id="publishedAt" value = "{{ event.publishedAt }}" required/>
+          <input type="date" class="validate form-control" name="publishedAt" [(ngModel)]="newPublishedAt" required/>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-6">
           <label for="publishedBy" class="form-label">Published By</label>
-          <input type="text" class="form-control" id="publishedBy" value ="{{ event.publishedBy }}" required/>
+          <input type="text" class="validate form-control" name="publishedBy" [(ngModel)]="event.publishedBy" required/>
         </div>
         <div class="mb-3 col-6">
           <label for="repost" class="form-label">Repost</label>
-          <select formControlName = "repost" class="validate form-select" id="repost" value="{{ event.repost }}">
+          <select class="validate form-select" name="repost" [(ngModel)]="event.repost">
             <option value=true>True</option>
             <option value=false>False</option>
           </select>
@@ -73,21 +73,23 @@
               </tr>
             </thead>
             <tbody id ="tbodyEk" *ngIf="emptyEk">
-              <tr *ngFor="let ek of eksDTO, let i = index;" >  
-              <th scope="row">{{ i + 1 }}</th>
-              <td>
-                  <input type="text" class="form-control" value={{ek?.name}} disabled/>
-              </td>
-              <td>
-                  <input type="text" class="form-control" value={{ek?.value}} disabled/>
-              </td>
-              <td>
-                <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(ek?.name, ek?.value)"></i>
-              </td>
-              <td>
-                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowEntityK(ek?.name)"></i>
-              </td>
-            </tr>
+             <ng-container *ngFor="let ek of event.entityKeys, let i = index;">
+                <tr id="{{ ek?.name }}">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>
+                      <input type="text" class="form-control" value={{ek?.name}} disabled/>
+                  </td>
+                  <td>
+                      <input type="text" class="form-control" value={{ek?.value}} disabled/>
+                  </td>
+                  <td>
+                    <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(ek?.name, ek?.value)"></i>
+                  </td>
+                  <td>
+                    <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowEntityK(ek?.name)"></i>
+                  </td>
+                </tr>
+             </ng-container> 
             </tbody>
           </table>
         </div>
@@ -109,28 +111,30 @@
               </tr>
             </thead>
             <tbody id ="tbodyRowParams" *ngIf="emptyP">
-              <tr *ngFor="let p of paramsDTO, let i = index;" >  
-              <th scope="row">{{ i + 1 }}</th>
-              <td>
-                  <input type="text" class="form-control" value={{p?.name}} disabled/>
-              </td>
-              <td>
-                  <input type="text" class="form-control" value={{p?.value}} disabled/>
-              </td>
-              <td>
-                <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(p?.name, p?.value)"></i>
-              </td>
-              <td>
-                <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams(p?.name)"></i>
-              </td>
-            </tr>
+              <ng-container *ngFor="let p of event.params, let i = index;">
+                <tr id="{{ p?.name }}" >  
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>
+                      <input type="text" class="form-control" value={{p?.name}} disabled/>
+                  </td>
+                  <td>
+                      <input type="text" class="form-control" value={{p?.value}} disabled/>
+                  </td>
+                  <td>
+                    <i class="bi bi-pencil" id="plus-two" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="setModalData(p?.name, p?.value)"></i>
+                  </td>
+                  <td>
+                    <i class="bi bi-x-square-fill" id="plus-two" (click)="deleteRowParams(p?.name)"></i>
+                  </td>
+                </tr>
+              </ng-container>
             </tbody>
           </table>
         </div>
       </div>
       <div class="row">
         <div class="mb-3 col-3">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" (onSubmit)="editEvent()">Save</button>
           <button type="button" class="btn btn-danger" routerLink = "/events/details/{{ event.eventId }}">Cancel</button>
         </div>   
       </div>

@@ -38,4 +38,11 @@ export class EventsService {
     return this.http.get(`${environment.apiURL}event/${eventId}`, {headers, responseType: 'text'});
   }
 
+  public editEvent(eventId: string, event: eventDTO){
+    return this.http.put(`${environment.apiURL}event/${eventId}`, event, {
+      headers: new HttpHeaders({
+        "content-type" : "application/json"
+      })
+    });
+  }
 }

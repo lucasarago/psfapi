@@ -33,23 +33,22 @@ export class EditComponent implements OnInit {
     newEvent: FormGroup;
     rowCountParams: number = 0;
     rowCountEk: number = 0;
-    paramsDTO: paramDTO[] = [];
-    eksDTO: entityKeyDTO[] = [];
     name: string = '';
     value: string = '';
     emptyEk: boolean = true;
     emptyP: boolean = true;
+    newPublishedAt: string;
+    newEffectiveStartDate: string;
     
 ngOnInit(): void {
   this.spinner.show();
-
   this.newEvent = this.formGroupEventCreator();
     setTimeout(() => {
       this.activatedRoute.params.subscribe(params => {
         this.eventService.getEventById(params.id).subscribe(eventDetails => {
           this.event = eventDetails;
-          this.paramsDTO = eventDetails.params;
-          this.eksDTO = eventDetails.entityKeys;
+          this.newPublishedAt = eventDetails.publishedAt.toString().substring(0, 10);
+          this.newEffectiveStartDate = eventDetails.effectiveStartDate.toString().substring(0, 10);
         })
       })
       this.spinner.hide();
@@ -68,9 +67,11 @@ public formGroupEventCreator(): FormGroup {
 }
 
 public editEvent():void{
-  if(this.newEvent.valid){
-    let event = this.buildEventData();
-    this.eventService.saveEvent(event)
+  if(true){
+    this.newEvent = this.formGroupEventCreator();
+    this.event.effectiveStartDate = new Date(this.newEffectiveStartDate + "T05:00:00.000Z");
+    this.event.publishedAt = new Date(this.newPublishedAt + "T05:00:00.000Z");
+   this.eventService.editEvent(this.event.eventId, this.event)
     .subscribe(item => {
       let modal = document.getElementById('alertCreate');
       modal.hidden = false;
@@ -94,8 +95,8 @@ public buildEventData():eventDTO{
     publishedAt: this.publishedAt.value,
     publishedBy: this.publishedBy.value,
     repost: this.repost.value,
-    entityKeys: this.eksDTO,
-    params: this.paramsDTO
+    entityKeys: this.event.entityKeys,
+    params: this.event.params
   }
 }
 
@@ -123,34 +124,31 @@ public get repost(){
   return this.newEvent.get('repost');
 }
 
-public get entityKeys(){
-  return this.newEvent.get('entityKeys');
-}
-
-public get params(){
-  return this.paramsDTO;
-}
 
 public deleteRowParams(name){
+
   let table = document.getElementById('tbodyRowParams');
-  if(this.paramsDTO.length > 1){
-    table.removeChild(document.getElementById(name));
-    this.deleteParam(name);
+  let row = document.getElementById(name);
+
+  if(this.event.params.length > 1){
+    table.removeChild(row);
   } else {
     this.emptyP = false;
-    this.deleteParam(name);
   }
+  this.deleteParam(name);
 }
 
 public deleteRowEntityK(name){
+  
   let table = document.getElementById('tbodyEk');
-  if(this.eksDTO.length > 1){
-    table.removeChild(document.getElementById(name));
-    this.deleteEK(name);
+  let row = document.getElementById(name);
+  
+  if(this.event.entityKeys.length > 1){
+    table.removeChild(row); 
   } else {
     this.emptyEk = false;
-    this.deleteEK(name);
   }
+  this.deleteEK(name);
 }
 
 public setParam(){
@@ -160,7 +158,8 @@ public setParam(){
   }
   param.name = this.name;
   param.value = this.value;
-  this.paramsDTO.push(param);
+  this.event.params.push(param);
+  console.log(this.event.params);
 }
 
 public setEk(){
@@ -170,18 +169,19 @@ public setEk(){
   }
   ek.name = this.name;
   ek.value = this.value;
-  this.eksDTO.push(ek);
+  this.event.entityKeys.push(ek);
+  console.log(this.event.entityKeys);
 }
 
 private deleteParam(name){
-  this.paramsDTO.forEach((param, index) => {
-    if(param.name == name) delete this.paramsDTO[index];
+  this.event.params.forEach((param, index) => {
+    if(param.name == name) this.event.params.splice(index, 1);
    });
 }
 
 private deleteEK(name){
-  this.eksDTO.forEach((ek, index) => {
-    if(ek.name == name) delete this.eksDTO[index];
+  this.event.entityKeys.forEach((ek, index) => {
+    if(ek.name == name) this.event.entityKeys.splice(index,1);
    });
 }
 

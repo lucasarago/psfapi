@@ -112,7 +112,7 @@ const getEventById = (req, res) => {
 const editEvent = (req, res) => {
     let eventId = req.params.id;
     let update = req.body;
-    Event.findOne({eventId:eventId}, update, (err, eventUpdated) => {
+    Event.findOneAndUpdate({eventId:eventId}, update, (err, eventUpdated) => {
         if(err) res.status(500).send({ message: `Internal Server Error: ${err}` });
         else{
             if(!eventUpdated) res.status(404).send({ message: `Event not found` });
